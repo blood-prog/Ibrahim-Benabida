@@ -132,18 +132,29 @@ export default function ProjectPage({ project, onClose }: ProjectPageProps) {
         </div>
 
         {/* Media Coverage */}
-        <div className="stagger-item" style={{
-          width: '100%',
-          aspectRatio: '16/9',
-          backgroundColor: '#EFE9E3',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: '10vh',
-          borderRadius: '8px',
-          border: '1px solid rgba(0,0,0,0.05)',
-          overflow: 'hidden'
-        }}>
+          <p style={{ 
+            fontSize: '0.75rem', 
+            color: 'rgba(44,42,40,0.5)', 
+            fontFamily: 'var(--font-body)', 
+            fontWeight: 500, 
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
+          }}>
+            Video load optimization in progress. Please allow a few seconds for the stream to initialize.
+          </p>
+          <div className="stagger-item" style={{
+            width: '100%',
+            aspectRatio: '16/9',
+            backgroundColor: '#EFE9E3',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: '10vh',
+            borderRadius: '8px',
+            border: '1px solid rgba(0,0,0,0.05)',
+            overflow: 'hidden'
+          }}>
           {project.videoUrl ? (
             <video 
               src={project.videoUrl}

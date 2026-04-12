@@ -48,6 +48,17 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       <h2 id="works-heading" className="heading" style={{ fontSize: '3rem', marginBottom: '10vh' }}>
         Selected Works
         <span style={{ display: 'block', fontSize: '1rem', color: 'var(--accent-electric)', fontFamily: 'var(--font-body)', fontWeight: 400, marginTop: '10px' }}>THE   PORTFOLIO   VAULT</span>
+        <p style={{ 
+          fontSize: '0.8rem', 
+          color: 'rgba(44,42,40,0.5)', 
+          fontFamily: 'var(--font-body)', 
+          fontWeight: 500, 
+          marginTop: '20px',
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
+        }}>
+          Note: High-quality case study videos may take a moment to load. Your patience is appreciated.
+        </p>
       </h2>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15vh' }}>
