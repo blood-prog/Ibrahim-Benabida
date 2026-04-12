@@ -1,0 +1,5 @@
+# robots.txt for ibrahimbenabida.me
+User-agent: *
+Allow: /
+
+Sitemap: https://ibrahimbenabida.me/sitemap.xml
