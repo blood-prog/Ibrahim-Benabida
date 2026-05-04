@@ -134,7 +134,7 @@ export default function ProjectPage({ project, onClose }: ProjectPageProps) {
         {/* Media Coverage */}
           <p style={{ 
             fontSize: '0.75rem', 
-            color: 'rgba(44,42,40,0.5)', 
+            color: 'rgba(250,250,250,0.4)', 
             fontFamily: 'var(--font-body)', 
             fontWeight: 500, 
             marginBottom: '1rem',

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import DevFaceModel from './DevFaceModel';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,11 +16,11 @@ export default function Header() {
         justifyContent: 'space-between',
         alignItems: 'center',
         zIndex: 100,
-        backgroundColor: 'rgba(239, 233, 227, 0.85)',
+        backgroundColor: 'rgba(10, 10, 10, 0.85)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(0,0,0,0.05)',
-        boxShadow: '0 4px 30px rgba(0,0,0,0.2)'
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 4px 30px rgba(0,0,0,0.4)'
       }}>
         <div 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -36,9 +35,6 @@ export default function Header() {
             letterSpacing: '1px'
           }}>
             Ibrahim Benabida
-          </div>
-          <div style={{ width: '45px', height: '45px' }}>
-            <DevFaceModel />
           </div>
         </div>
         

@@ -1,7 +1,7 @@
 import { useEffect, useRef, Suspense, lazy } from 'react';
 import gsap from 'gsap';
 
-const DevFaceModel = lazy(() => import('./DevFaceModel'));
+const FloatingShapes = lazy(() => import('./FloatingShapes'));
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +83,7 @@ export default function Hero() {
           lineHeight: 1,
           position: 'relative',
           zIndex: 10,
-          textShadow: '0 10px 40px rgba(239, 233, 227, 0.8), 0 0 20px rgba(239, 233, 227, 0.9)'
+          textShadow: '0 10px 40px rgba(0, 0, 0, 0.2)'
         }}>
           Ibrahim
         </div>
@@ -102,7 +102,7 @@ export default function Hero() {
           zIndex: 10,
           whiteSpace: 'nowrap',
           width: '100%',
-          textShadow: '0 10px 40px rgba(239, 233, 227, 0.8), 0 0 20px rgba(239, 233, 227, 0.9)'
+          textShadow: '0 10px 40px rgba(0, 0, 0, 0.2)'
         }}>
           BENABIDA
         </h1>
@@ -113,7 +113,7 @@ export default function Hero() {
             fontWeight: 400,
             letterSpacing: '2px',
             textTransform: 'uppercase',
-            color: 'rgba(44,42,40,0.6)',
+            color: 'var(--text-muted)',
             textAlign: 'left',
             marginTop: '3rem',
             fontFamily: 'var(--font-body)',
@@ -125,7 +125,7 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* 3D Dev Face Model positioned in the right corner, large size */}
+      {/* 3D Model positioned in the right corner */}
       <div style={{
         position: 'absolute',
         right: 'clamp(-5vw, 2vw, 5vw)',
@@ -133,12 +133,12 @@ export default function Hero() {
         transform: 'translateY(-50%)',
         width: 'clamp(250px, 50vw, 800px)',
         height: 'clamp(250px, 50vw, 800px)',
-        zIndex: 1, // Behind the text but clearly visible
-        pointerEvents: 'none' // Don't block interactions underneath
+        zIndex: 1,
+        pointerEvents: 'none'
       }}>
         <div style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}>
           <Suspense fallback={<div style={{ width: '100%', height: '100%' }} />}>
-            <DevFaceModel />
+            <FloatingShapes />
           </Suspense>
         </div>
       </div>

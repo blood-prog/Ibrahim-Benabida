@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense, lazy } from 'react';
 import gsap from 'gsap';
+
+const InteractiveGlobe = lazy(() => import('./InteractiveGlobe'));
 
 export default function Footer() {
   const btnRef = useRef<HTMLAnchorElement>(null);
@@ -116,7 +118,9 @@ export default function Footer() {
         padding: '8vh 5vw 4vh 5vw',
         display: 'flex',
         flexDirection: 'column',
-        gap: '6vh'
+        gap: '6vh',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
         <div className="footer-grid" style={{
           display: 'grid',
@@ -124,7 +128,9 @@ export default function Footer() {
           gap: '40px',
           maxWidth: '1400px',
           width: '100%',
-          margin: '0 auto'
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 2
         }}>
           {/* EMAILS */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -154,12 +160,30 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Globe Background */}
+        <div style={{
+          position: 'absolute',
+          right: '-10%',
+          bottom: '-20%',
+          width: '600px',
+          height: '600px',
+          zIndex: 1,
+          opacity: 0.6,
+          pointerEvents: 'none' // Don't block links
+        }}>
+          <Suspense fallback={null}>
+            <InteractiveGlobe />
+          </Suspense>
+        </div>
+
         <div style={{
           maxWidth: '1400px',
           width: '100%',
           margin: '0 auto',
           paddingTop: '20px',
-          borderTop: '1px solid rgba(255,255,255,0.1)'
+          borderTop: '1px solid rgba(255,255,255,0.1)',
+          position: 'relative',
+          zIndex: 2
         }}>
           <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
             © {new Date().getFullYear()} Ibrahim Benabida.

@@ -64,7 +64,7 @@ export default function Intro() {
           <p style={{
             fontSize: '1.2rem',
             lineHeight: 1.8,
-            color: 'rgba(44, 42, 40, 0.8)',
+            color: 'rgba(250, 250, 250, 0.6)',
             fontFamily: 'var(--font-body)',
             fontWeight: 400
           }}>
@@ -73,7 +73,7 @@ export default function Intro() {
           <p style={{
             fontSize: '1.2rem',
             lineHeight: 1.8,
-            color: 'rgba(44, 42, 40, 0.8)',
+            color: 'rgba(250, 250, 250, 0.6)',
             fontFamily: 'var(--font-body)',
             fontWeight: 400
           }}>

@@ -27,11 +27,12 @@
 }
 
 :root {
-  --bg-primary: #F9F8F6;
-  --bg-secondary: #EFE9E3;
-  --accent-electric: #C9B59C;
-  --accent-blush: #D9CFC7;
-  --text-neutral: #2C2A28;
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #141414;
+  --accent-electric: #E0E0E0; /* Silver/grey accent instead of blush */
+  --accent-blush: #202020; /* Darker accent for gradients */
+  --text-neutral: #FAFAFA;
+  --text-muted: #888888;
   
   --font-headings: 'Syne', 'Syne-fallback', sans-serif;
   --font-body: 'Inter', 'Inter-fallback', sans-serif;
