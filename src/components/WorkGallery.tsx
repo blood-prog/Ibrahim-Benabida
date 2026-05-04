@@ -170,8 +170,8 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
           positions.current.x = positions.target.x;
           positions.current.y = positions.target.y;
         } else {
-          positions.current.x = lerp(positions.current.x, positions.target.x, 0.07);
-          positions.current.y = lerp(positions.current.y, positions.target.y, 0.07);
+          positions.current.x = lerp(positions.current.x, positions.target.x, 0.12);
+          positions.current.y = lerp(positions.current.y, positions.target.y, 0.12);
         }
         element.style.transform = `translate(-50%, -50%) translate3d(${positions.current.x}px, ${positions.current.y}px, 0px)`;
       });
@@ -181,7 +181,7 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
 
     const updateCardsPosition = () => {
       const targetX = -moveDistance * scrollProgressRef.current;
-      currentXRef.current = lerp(currentXRef.current, targetX, 0.07);
+      currentXRef.current = lerp(currentXRef.current, targetX, 0.15);
       gsap.set(cards, { x: currentXRef.current });
     };
 
@@ -196,10 +196,10 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     const st = ScrollTrigger.create({
       trigger: section,
       start: 'top top',
-      end: '+=700%',
+      end: '+=400%',
       pin: true,
       pinSpacing: true,
-      scrub: 1,
+      scrub: true,
       onUpdate: (self) => {
         scrollProgressRef.current = self.progress;
         updateTargetPositions(self.progress);
