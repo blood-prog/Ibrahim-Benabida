@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/favicon.svg" width="60" alt="Ibrahim Benabida Logo" />
+  <img src="public/favicon.png" width="60" alt="Ibrahim Benabida Logo" />
 </p>
 
 <h1 align="center">Ibrahim Benabida — Portfolio</h1>

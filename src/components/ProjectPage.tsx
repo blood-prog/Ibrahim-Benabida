@@ -167,9 +167,11 @@ export default function ProjectPage({ project, onClose }: ProjectPageProps) {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (
-            <p style={{ fontFamily: 'var(--font-body)', color: 'rgba(0,0,0,0.3)', fontWeight: 600, letterSpacing: '2px' }}>
-              [ YOUR VIDEO / OUTSIDE PICTURE PLACEMENT ]
-            </p>
+            <img 
+              src={project.bannerImage} 
+              alt={`${project.title} screenshot`}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           )}
         </div>
 
