@@ -14,9 +14,7 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const gridCanvasRef = useRef<HTMLCanvasElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
-  const letterPositionsRef = useRef<Map<HTMLElement, { current: { x: number; y: number }; target: { x: number; y: number } }>>(new Map());
   const pathsRef = useRef<{ curve: any; letterElements: HTMLElement[] }[]>([]);
-  const animFrameRef = useRef<number>(0);
   const scrollProgressRef = useRef(0);
 
   const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
@@ -108,10 +106,6 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
           opacity: 0.12;
         `;
         textContainer.appendChild(el);
-        letterPositionsRef.current.set(el, {
-          current: { x: 0, y: 0 },
-          target: { x: 0, y: 0 }
-        });
         letterElements.push(el);
       }
 
@@ -154,38 +148,16 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
             (i / 14 + scrollProgress * path.curve.speedMultiplier) % 1
           );
           const projected = projectPoint(point3d);
-          const pos = letterPositionsRef.current.get(el);
-          if (pos) {
-            pos.target = { x: projected.x, y: projected.y };
-          }
+          
+          gsap.set(el, {
+            x: projected.x,
+            y: projected.y,
+            xPercent: -50,
+            yPercent: -50,
+            force3D: true
+          });
         });
       });
-    };
-
-    const updateLetterPositions = () => {
-      letterPositionsRef.current.forEach((positions, element) => {
-        const distX = positions.target.x - positions.current.x;
-        if (Math.abs(distX) > window.innerWidth * 0.7) {
-          positions.current.x = positions.target.x;
-          positions.current.y = positions.target.y;
-        } else {
-          positions.current.x = lerp(positions.current.x, positions.target.x, 0.12);
-          positions.current.y = lerp(positions.current.y, positions.target.y, 0.12);
-        }
-        gsap.set(element, { 
-          x: positions.current.x, 
-          y: positions.current.y, 
-          xPercent: -50, 
-          yPercent: -50, 
-          force3D: true 
-        });
-      });
-    };
-
-    // Animation loop for floating letters only
-    const animate = () => {
-      updateLetterPositions();
-      animFrameRef.current = requestAnimationFrame(animate);
     };
 
     // ScrollTrigger using native GSAP tween for the cards
@@ -212,7 +184,6 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
 
     drawGrid(0);
     updateTargetPositions(0);
-    animate();
 
     const handleResize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -231,11 +202,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     return () => {
       st.scrollTrigger?.kill();
       st.kill();
-      cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
       // Clean up letter elements
       paths.forEach(p => p.letterElements.forEach(el => el.remove()));
-      letterPositionsRef.current.clear();
     };
   }, [drawGrid, lerp]);
 
