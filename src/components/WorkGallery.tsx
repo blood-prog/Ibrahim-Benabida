@@ -293,11 +293,10 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
         {projects.map((proj) => (
           <div
             key={proj.id}
+            className="work-gallery-card"
             data-cursor="VIEW PROJECT"
             onClick={() => onProjectSelect(proj)}
             style={{
-              width: '12%',
-              height: '55%',
               padding: '0.5rem',
               backgroundColor: '#0A0A0A',
               display: 'flex',

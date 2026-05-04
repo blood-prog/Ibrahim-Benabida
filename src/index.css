@@ -129,6 +129,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Responsive Base Classes */
+.work-gallery-card {
+  width: 12%;
+  height: 55%;
+}
+
 .desktop-nav {
   display: flex;
 }
@@ -152,9 +157,11 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Work Gallery Cards */
   .work-gallery-card {
-    width: 100% !important;
-    align-self: flex-start !important;
-    margin-top: 5vh !important;
+    width: 85vw !important;
+    height: auto !important;
+    aspect-ratio: 4/3 !important;
+    align-self: center !important;
+    margin-top: 0 !important;
   }
   .project-title {
     font-size: clamp(1.5rem, 6vw, 2.5rem) !important;
