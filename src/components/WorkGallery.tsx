@@ -15,32 +15,47 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
   const gridCanvasRef = useRef<HTMLCanvasElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const pathsRef = useRef<{ curve: any; letterElements: HTMLElement[] }[]>([]);
+  const animFrameRef = useRef<number>(0);
   const scrollProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
+  const patternCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
 
+  useEffect(() => {
+    // Pre-render the dot grid pattern once
+    const pCanvas = document.createElement('canvas');
+    pCanvas.width = 30;
+    pCanvas.height = 30;
+    const pCtx = pCanvas.getContext('2d');
+    if (pCtx) {
+      pCtx.fillStyle = '#0A0A0A';
+      pCtx.fillRect(0, 0, 30, 30);
+      pCtx.fillStyle = '#E0E0E0';
+      pCtx.beginPath();
+      // Draw the dot at (0,0) so the pattern repeats seamlessly
+      pCtx.arc(0, 0, 1, 0, Math.PI * 2);
+      pCtx.fill();
+    }
+    patternCanvasRef.current = pCanvas;
+  }, []);
+
   const drawGrid = useCallback((scrollProgress: number) => {
     const canvas = gridCanvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !patternCanvasRef.current) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.fillStyle = '#0A0A0A';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#E0E0E0';
-
-    const dotSize = 1;
     const spacing = 30;
-    const rows = Math.ceil(canvas.height / spacing);
-    const cols = Math.ceil(canvas.width / spacing) + 15;
     const offset = (scrollProgress * spacing * 10) % spacing;
 
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        ctx.beginPath();
-        ctx.arc(x * spacing - offset, y * spacing, dotSize, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    const pattern = ctx.createPattern(patternCanvasRef.current, 'repeat');
+    if (pattern) {
+      ctx.save();
+      ctx.translate(-offset, 0);
+      ctx.fillStyle = pattern;
+      ctx.fillRect(offset, 0, canvas.width + spacing, canvas.height + spacing);
+      ctx.restore();
     }
   }, []);
 
@@ -140,12 +155,12 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       };
     };
 
-    const updateTargetPositions = (scrollProgress: number) => {
+    const updateTargetPositions = (progress: number) => {
       paths.forEach((path) => {
         path.letterElements.forEach((el, i) => {
           const point3d = getPointOnCurve(
             path.curve.points,
-            (i / 14 + scrollProgress * path.curve.speedMultiplier) % 1
+            (i / 14 + progress * path.curve.speedMultiplier) % 1
           );
           const projected = projectPoint(point3d);
           
@@ -160,30 +175,36 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       });
     };
 
-    // ScrollTrigger using native GSAP tween for the cards
-    const getScrollAmount = () => -(cards.scrollWidth - window.innerWidth);
-    
-    const st = gsap.to(cards, {
-      x: getScrollAmount,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
+    const updateCardsPosition = (progress: number) => {
+      const maxScroll = cards.scrollWidth - window.innerWidth;
+      const targetX = -maxScroll * progress;
+      gsap.set(cards, { x: targetX, force3D: true });
+    };
+
+    const animate = () => {
+      currentProgressRef.current = lerp(currentProgressRef.current, scrollProgressRef.current, 0.08);
+      
+      updateTargetPositions(currentProgressRef.current);
+      updateCardsPosition(currentProgressRef.current);
+      drawGrid(currentProgressRef.current);
+      
+      animFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    const st = ScrollTrigger.create({
+      trigger: section,
       start: 'top top',
       end: window.innerWidth < 768 ? '+=150%' : '+=350%',
       pin: true,
       pinSpacing: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          scrollProgressRef.current = self.progress;
-          updateTargetPositions(self.progress);
-          drawGrid(self.progress);
-        }
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        scrollProgressRef.current = self.progress;
       }
     });
 
-    drawGrid(0);
-    updateTargetPositions(0);
+    animate();
 
     const handleResize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -200,8 +221,8 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     window.addEventListener('resize', handleResize);
 
     return () => {
-      st.scrollTrigger?.kill();
       st.kill();
+      cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
       // Clean up letter elements
       paths.forEach(p => p.letterElements.forEach(el => el.remove()));
