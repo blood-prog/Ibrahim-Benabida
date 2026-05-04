@@ -177,11 +177,11 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       });
     };
 
-    const moveDistance = window.innerWidth * 5;
-
     const updateCardsPosition = () => {
-      const targetX = -moveDistance * scrollProgressRef.current;
-      currentXRef.current = lerp(currentXRef.current, targetX, 0.15);
+      if (!cards) return;
+      const maxScroll = cards.scrollWidth - window.innerWidth;
+      const targetX = -maxScroll * scrollProgressRef.current;
+      currentXRef.current = lerp(currentXRef.current, targetX, 0.08);
       gsap.set(cards, { x: currentXRef.current });
     };
 
@@ -280,13 +280,12 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
         ref={cardsRef}
         style={{
           position: 'relative',
-          width: `${projects.length * 100}vw`,
           height: '100vh',
-          paddingLeft: '100vw',
-          overflow: 'hidden',
+          padding: '0 50vw',
           display: 'flex',
-          justifyContent: 'space-around',
+          gap: '15vw',
           alignItems: 'center',
+          width: 'max-content',
           zIndex: 10
         }}
       >

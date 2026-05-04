@@ -226,10 +226,10 @@ h1, h2, h3, h4, h5, h6 {
   left: 50px;
   bottom: 50px;
   display: flex;
-  height: 100px;
+  height: clamp(41px, 8.1vw, 102px);
   font-size: clamp(40px, 8vw, 100px);
   line-height: clamp(41px, 8.1vw, 102px);
-  clip-path: polygon(0 0, 100% 0, 100% 100px, 0 100px);
+  overflow: hidden;
   font-weight: 800;
   font-family: var(--font-headings);
 }
@@ -238,17 +238,14 @@ h1, h2, h3, h4, h5, h6 {
 .counter-2,
 .counter-3 {
   position: relative;
-  top: -15px;
 }
 
 .num1offset1 {
   position: relative;
-  right: -25px;
 }
 
 .num1offset2 {
   position: relative;
-  right: -10px;
 }
 
 .loader {
