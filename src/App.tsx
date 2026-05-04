@@ -15,11 +15,13 @@ import Services from './components/Services';
 import Manifesto from './components/Manifesto';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import Preloader from './components/Preloader';
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [activeProject, setActiveProject] = useState<ProjectData | null>(null);
+  const [isPreloading, setIsPreloading] = useState(true);
 
   useEffect(() => {
     // Lenis smooth scroll configuration
@@ -44,6 +46,7 @@ function App() {
 
   return (
     <>
+      {isPreloading && <Preloader onComplete={() => setIsPreloading(false)} />}
       <CustomCursor />
       
       {/* SVG Noise Overlay */}

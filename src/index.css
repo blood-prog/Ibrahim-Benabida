@@ -207,3 +207,73 @@ h1, h2, h3, h4, h5, h6 {
     gap: 30px !important;
   }
 }
+
+/* --- Preloader Styles --- */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-neutral);
+  pointer-events: all;
+  z-index: 99999;
+}
+
+.counter {
+  position: fixed;
+  left: 50px;
+  bottom: 50px;
+  display: flex;
+  height: 100px;
+  font-size: clamp(40px, 8vw, 100px);
+  line-height: clamp(41px, 8.1vw, 102px);
+  clip-path: polygon(0 0, 100% 0, 100% 100px, 0 100px);
+  font-weight: 800;
+  font-family: var(--font-headings);
+}
+
+.counter-1,
+.counter-2,
+.counter-3 {
+  position: relative;
+  top: -15px;
+}
+
+.num1offset1 {
+  position: relative;
+  right: -25px;
+}
+
+.num1offset2 {
+  position: relative;
+  right: -10px;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  background: #333;
+}
+
+.loader-1 {
+  position: relative;
+  background: var(--text-neutral);
+  width: 200px;
+}
+
+.loader-2 {
+  position: relative;
+  width: 100px;
+  background: var(--text-neutral);
+}
+
+.bar {
+  height: 50px;
+}
