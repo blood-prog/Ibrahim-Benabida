@@ -172,36 +172,41 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
           positions.current.x = lerp(positions.current.x, positions.target.x, 0.12);
           positions.current.y = lerp(positions.current.y, positions.target.y, 0.12);
         }
-        element.style.transform = `translate(-50%, -50%) translate3d(${positions.current.x}px, ${positions.current.y}px, 0px)`;
+        gsap.set(element, { 
+          x: positions.current.x, 
+          y: positions.current.y, 
+          xPercent: -50, 
+          yPercent: -50, 
+          force3D: true 
+        });
       });
     };
 
-    const updateCardsPosition = () => {
-      if (!cards) return;
-      const maxScroll = cards.scrollWidth - window.innerWidth;
-      const targetX = -maxScroll * scrollProgressRef.current;
-      gsap.set(cards, { x: targetX });
-    };
-
-    // Animation loop
+    // Animation loop for floating letters only
     const animate = () => {
       updateLetterPositions();
-      updateCardsPosition();
       animFrameRef.current = requestAnimationFrame(animate);
     };
 
-    // ScrollTrigger
-    const st = ScrollTrigger.create({
-      trigger: section,
+    // ScrollTrigger using native GSAP tween for the cards
+    const getScrollAmount = () => -(cards.scrollWidth - window.innerWidth);
+    
+    const st = gsap.to(cards, {
+      x: getScrollAmount,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
       start: 'top top',
       end: window.innerWidth < 768 ? '+=150%' : '+=350%',
       pin: true,
       pinSpacing: true,
-      scrub: true,
-      onUpdate: (self) => {
-        scrollProgressRef.current = self.progress;
-        updateTargetPositions(self.progress);
-        drawGrid(self.progress);
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          scrollProgressRef.current = self.progress;
+          updateTargetPositions(self.progress);
+          drawGrid(self.progress);
+        }
       }
     });
 
@@ -224,6 +229,7 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     window.addEventListener('resize', handleResize);
 
     return () => {
+      st.scrollTrigger?.kill();
       st.kill();
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
