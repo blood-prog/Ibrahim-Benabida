@@ -215,8 +215,8 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: var(--bg-primary);
-  color: var(--text-neutral);
+  background: #E0E0E0;
+  color: #0A0A0A;
   pointer-events: all;
   z-index: 99999;
 }
@@ -256,19 +256,19 @@ h1, h2, h3, h4, h5, h6 {
   height: 50px;
   transform: translate(-50%, -50%);
   display: flex;
-  background: #333;
+  background: #B0B0B0;
 }
 
 .loader-1 {
   position: relative;
-  background: var(--text-neutral);
+  background: #0A0A0A;
   width: 200px;
 }
 
 .loader-2 {
   position: relative;
   width: 100px;
-  background: var(--text-neutral);
+  background: #0A0A0A;
 }
 
 .bar {

@@ -14,7 +14,6 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
   const gridCanvasRef = useRef<HTMLCanvasElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
-  const currentXRef = useRef(0);
   const letterPositionsRef = useRef<Map<HTMLElement, { current: { x: number; y: number }; target: { x: number; y: number } }>>(new Map());
   const pathsRef = useRef<{ curve: any; letterElements: HTMLElement[] }[]>([]);
   const animFrameRef = useRef<number>(0);
@@ -181,8 +180,7 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       if (!cards) return;
       const maxScroll = cards.scrollWidth - window.innerWidth;
       const targetX = -maxScroll * scrollProgressRef.current;
-      currentXRef.current = lerp(currentXRef.current, targetX, 0.08);
-      gsap.set(cards, { x: currentXRef.current });
+      gsap.set(cards, { x: targetX });
     };
 
     // Animation loop
