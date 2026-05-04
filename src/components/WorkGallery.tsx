@@ -196,7 +196,7 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     const st = ScrollTrigger.create({
       trigger: section,
       start: 'top top',
-      end: '+=400%',
+      end: window.innerWidth < 768 ? '+=150%' : '+=350%',
       pin: true,
       pinSpacing: true,
       scrub: true,
