@@ -37,7 +37,7 @@ export default function Hero() {
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-        backgroundColor: 'var(--bg-primary)'
+        backgroundColor: '#0F0F0F'
       }}
     >
       {/* Soft Background Orb */}

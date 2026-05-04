@@ -18,7 +18,7 @@ function Shape() {
       <mesh ref={meshRef} scale={1.8}>
         <icosahedronGeometry args={[1, 1]} />
         <meshPhysicalMaterial 
-          color="#111111"
+          color="#333333"
           roughness={0.1}
           metalness={0.8}
           wireframe={true}
