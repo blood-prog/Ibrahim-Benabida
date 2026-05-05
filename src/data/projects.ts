@@ -17,7 +17,7 @@ export const projects: ProjectData[] = [
     id: '01', 
     title: 'Smart Residency', 
     category: 'Mobile Application', 
-    demoUrl: '#',
+    demoUrl: 'https://smart-residence-two.vercel.app/',
     align: 'flex-start',
     description: 'A comprehensive mobile application designed to manage smart residency services, including sports facility bookings, maintenance requests, and administrative access with full Arabic RTL support.',
     technologies: ['React Native', 'Supabase', 'TypeScript'],
