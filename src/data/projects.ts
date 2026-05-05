@@ -52,7 +52,7 @@ export const projects: ProjectData[] = [
     id: '04', 
     title: 'Ibrahim Benabida Portfolio', 
     category: 'Personal Portfolio', 
-    demoUrl: 'https://ibrahim.benabida.vercel.app',
+    demoUrl: 'https://ibrahim-benabida.vercel.app/',
     align: 'flex-end',
     marginTop: '10vh',
     description: 'A vibe-coded personal portfolio featuring 3D wireframe geometry, WebGL distortion effects, and a premium dark mode design with Lenis smooth scrolling.',
