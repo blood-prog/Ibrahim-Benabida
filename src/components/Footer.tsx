@@ -154,7 +154,7 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <h4 style={{ color: '#D9CFC7', fontFamily: 'var(--font-headings)', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Links</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <a href="#" style={{ color: '#F9F8F6', textDecoration: 'none', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 600, transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#C9B59C'} onMouseLeave={(e) => e.currentTarget.style.color = '#F9F8F6'}>Curriculum Vitae</a>
+              <a href="/Ibrahim_Benabida_CV.pdf" target="_blank" rel="noopener noreferrer" style={{ color: '#F9F8F6', textDecoration: 'none', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 600, transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#C9B59C'} onMouseLeave={(e) => e.currentTarget.style.color = '#F9F8F6'}>Curriculum Vitae</a>
               <a href="https://github.com/blood-prog" target="_blank" rel="noopener noreferrer" style={{ color: '#F9F8F6', textDecoration: 'none', fontFamily: 'var(--font-body)', fontSize: '0.95rem', fontWeight: 600, transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#C9B59C'} onMouseLeave={(e) => e.currentTarget.style.color = '#F9F8F6'}>Github Profile</a>
             </div>
           </div>
