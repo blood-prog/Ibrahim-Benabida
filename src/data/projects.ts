@@ -13,10 +13,10 @@ export interface ProjectData {
 }
 
 export const projects: ProjectData[] = [
-  { 
-    id: '01', 
-    title: 'Smart Residency', 
-    category: 'Mobile Application', 
+  {
+    id: '01',
+    title: 'Smart Residency',
+    category: 'Mobile Application',
     demoUrl: 'https://smart-residence-two.vercel.app/',
     align: 'flex-start',
     description: 'A comprehensive mobile application designed to manage smart residency services, including sports facility bookings, maintenance requests, and administrative access with full Arabic RTL support.',
@@ -24,22 +24,22 @@ export const projects: ProjectData[] = [
     bannerImage: '/images/project5.png',
     isVideoCover: false
   },
-  { 
-    id: '02', 
-    title: 'Tarek Graphics', 
-    category: 'Design Portfolio', 
+  {
+    id: '02',
+    title: 'Tarek Graphics',
+    category: 'Design Portfolio',
     demoUrl: '#',
     align: 'flex-end',
     marginTop: '10vh',
-    description: 'A premium portfolio for a 3D generalist and designer. Focuses on high-end visual aesthetics with a dark mode theme and immersive project galleries.',
+    description: 'A premium portfolio for a 3D generalist and designer. Focuses on high-end visual aesthetics with a dark mode theme and immersive project galleries, inspired from another design without cloning it, just tried to rebuild it from 0 with AntiGravity',
     technologies: ['React', 'Framer Motion', 'Three.js'],
     bannerImage: '/images/project2.png',
     isVideoCover: false
   },
-  { 
-    id: '03', 
-    title: 'USTHB TIC Projects', 
-    category: 'Educational Platform', 
+  {
+    id: '03',
+    title: 'USTHB TIC Projects',
+    category: 'Educational Platform',
     demoUrl: 'https://usthb-datascience-ict-projects.vercel.app/',
     align: 'flex-start',
     marginTop: '5vh',
@@ -48,10 +48,10 @@ export const projects: ProjectData[] = [
     bannerImage: '/images/project1.png',
     isVideoCover: false
   },
-  { 
-    id: '04', 
-    title: 'Ibrahim Benabida Portfolio', 
-    category: 'Personal Portfolio', 
+  {
+    id: '04',
+    title: 'Ibrahim Benabida Portfolio',
+    category: 'Personal Portfolio',
     demoUrl: 'https://ibrahim-benabida.vercel.app/',
     align: 'flex-end',
     marginTop: '10vh',
@@ -60,10 +60,10 @@ export const projects: ProjectData[] = [
     bannerImage: '/images/ibrahim_portfolio.png',
     isVideoCover: false
   },
-  { 
-    id: '05', 
-    title: 'Oussama Benabida Academic', 
-    category: 'Academic Portfolio', 
+  {
+    id: '05',
+    title: 'Oussama Benabida Academic',
+    category: 'Academic Portfolio',
     demoUrl: 'https://abdou-oussama-benabida.vercel.app/',
     align: 'flex-start',
     marginTop: '10vh',
