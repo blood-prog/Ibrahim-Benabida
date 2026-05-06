@@ -19,8 +19,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
   const scrollProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
   const patternCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cachedPatternRef = useRef<CanvasPattern | null>(null);
 
-  const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   useEffect(() => {
     // Pre-render the dot grid pattern once
@@ -33,7 +34,6 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       pCtx.fillRect(0, 0, 30, 30);
       pCtx.fillStyle = '#E0E0E0';
       pCtx.beginPath();
-      // Draw the dot at (0,0) so the pattern repeats seamlessly
       pCtx.arc(0, 0, 1, 0, Math.PI * 2);
       pCtx.fill();
     }
@@ -49,7 +49,12 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     const spacing = 30;
     const offset = (scrollProgress * spacing * 10) % spacing;
 
-    const pattern = ctx.createPattern(patternCanvasRef.current, 'repeat');
+    // Cache the pattern instead of recreating every frame
+    if (!cachedPatternRef.current) {
+      cachedPatternRef.current = ctx.createPattern(patternCanvasRef.current, 'repeat');
+    }
+
+    const pattern = cachedPatternRef.current;
     if (pattern) {
       ctx.save();
       ctx.translate(-offset, 0);
@@ -66,8 +71,10 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     const textContainer = textContainerRef.current;
     if (!section || !cards || !canvas || !textContainer) return;
 
-    // Resize canvas
-    const dpr = window.devicePixelRatio || 1;
+    const mobile = window.innerWidth < 768;
+
+    // Cap DPR at 2 to avoid 3x rendering on flagship phones
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = `${window.innerWidth}px`;
@@ -75,7 +82,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
     const ctx = canvas.getContext('2d');
     if (ctx) ctx.scale(dpr, dpr);
 
-    // Build 3D-like text paths using simple sine wave math (no Three.js needed)
+    // Reset cached pattern when canvas context changes
+    cachedPatternRef.current = null;
+
     const word = 'WORK';
     const createPath = (yPos: number, amplitude: number) => {
       const points: { x: number; y: number; z: number }[] = [];
@@ -99,12 +108,14 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
 
     const speedMultipliers = [0.8, 1, 0.7, 0.9];
 
-    // Create letter elements
+    // Fewer letters on mobile = fewer DOM nodes to update per frame
+    const letterCount = mobile ? 8 : 15;
+
     const paths = pathConfigs.map((config, lineIndex) => {
       const curvePoints = createPath(config.yPos, config.amplitude);
 
       const letterElements: HTMLElement[] = [];
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < letterCount; i++) {
         const el = document.createElement('div');
         el.className = 'showcase-letter';
         el.textContent = word[lineIndex];
@@ -115,10 +126,12 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
           font-weight: 800;
           color: #E0E0E0;
           z-index: 2;
-          transform-origin: center;
-          will-change: transform;
           pointer-events: none;
           opacity: 0.12;
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          contain: layout style;
         `;
         textContainer.appendChild(el);
         letterElements.push(el);
@@ -129,19 +142,21 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
 
     pathsRef.current = paths;
 
-    // Project point to screen coords (simple perspective projection)
+    // Perspective projection
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    const aspect = winW / winH;
+    const fov = 50;
+    const cameraZ = 20;
+
     const projectPoint = (p: { x: number; y: number; z: number }) => {
-      const fov = 50;
-      const cameraZ = 20;
-      const aspect = window.innerWidth / window.innerHeight;
       const scale = fov / (cameraZ - p.z);
       return {
-        x: (p.x * scale / aspect + 0) * (window.innerWidth / 40) + window.innerWidth / 2,
-        y: (-p.y * scale + 0) * (window.innerHeight / 40) + window.innerHeight / 2
+        x: (p.x * scale / aspect) * (winW / 40) + winW / 2,
+        y: (-p.y * scale) * (winH / 40) + winH / 2
       };
     };
 
-    // Interpolate along curve
     const getPointOnCurve = (points: { x: number; y: number; z: number }[], t: number) => {
       const clampedT = ((t % 1) + 1) % 1;
       const idx = clampedT * (points.length - 1);
@@ -155,46 +170,52 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       };
     };
 
+    // Direct DOM writes instead of gsap.set() for each letter — zero overhead
     const updateTargetPositions = (progress: number) => {
       paths.forEach((path) => {
+        const count = path.letterElements.length;
         path.letterElements.forEach((el, i) => {
           const point3d = getPointOnCurve(
             path.curve.points,
-            (i / 14 + progress * path.curve.speedMultiplier) % 1
+            (i / (count - 1) + progress * path.curve.speedMultiplier) % 1
           );
           const projected = projectPoint(point3d);
-          
-          gsap.set(el, {
-            x: projected.x,
-            y: projected.y,
-            xPercent: -50,
-            yPercent: -50,
-            force3D: true
-          });
+          el.style.transform = `translate3d(${projected.x - el.offsetWidth * 0.5}px, ${projected.y - el.offsetHeight * 0.5}px, 0)`;
         });
       });
     };
 
+    // Cache maxScroll so we don't read scrollWidth every frame
+    let maxScroll = cards.scrollWidth - window.innerWidth;
+
     const updateCardsPosition = (progress: number) => {
-      const maxScroll = cards.scrollWidth - window.innerWidth;
       const targetX = -maxScroll * progress;
-      gsap.set(cards, { x: targetX, force3D: true });
+      cards.style.transform = `translate3d(${targetX}px, 0, 0)`;
     };
 
+    // Faster lerp on mobile = scroll feels immediate, not trailing behind
+    const lerpFactor = mobile ? 0.18 : 0.08;
+
     const animate = () => {
-      currentProgressRef.current = lerp(currentProgressRef.current, scrollProgressRef.current, 0.08);
-      
-      updateTargetPositions(currentProgressRef.current);
-      updateCardsPosition(currentProgressRef.current);
-      drawGrid(currentProgressRef.current);
-      
+      const prev = currentProgressRef.current;
+      const target = scrollProgressRef.current;
+      const next = prev + (target - prev) * lerpFactor;
+
+      // Skip update if nothing moved (saves CPU when idle)
+      if (Math.abs(next - prev) > 0.00001) {
+        currentProgressRef.current = next;
+        updateCardsPosition(next);
+        updateTargetPositions(next);
+        drawGrid(next);
+      }
+
       animFrameRef.current = requestAnimationFrame(animate);
     };
 
     const st = ScrollTrigger.create({
       trigger: section,
       start: 'top top',
-      end: window.innerWidth < 768 ? '+=150%' : '+=350%',
+      end: mobile ? '+=150%' : '+=350%',
       pin: true,
       pinSpacing: true,
       scrub: true,
@@ -204,16 +225,24 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       }
     });
 
+    // Let layout settle, then cache maxScroll
+    requestAnimationFrame(() => {
+      maxScroll = cards.scrollWidth - window.innerWidth;
+    });
+
     animate();
 
     const handleResize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       const ctx2 = canvas.getContext('2d');
       if (ctx2) ctx2.scale(dpr, dpr);
+      // Invalidate pattern cache on resize (new context)
+      cachedPatternRef.current = null;
+      maxScroll = cards.scrollWidth - window.innerWidth;
       drawGrid(scrollProgressRef.current);
       updateTargetPositions(scrollProgressRef.current);
     };
@@ -224,10 +253,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
       st.kill();
       cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
-      // Clean up letter elements
       paths.forEach(p => p.letterElements.forEach(el => el.remove()));
     };
-  }, [drawGrid, lerp]);
+  }, [drawGrid]);
 
   return (
     <section
@@ -280,7 +308,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
           gap: '15vw',
           alignItems: 'center',
           width: 'max-content',
-          zIndex: 10
+          zIndex: 10,
+          willChange: 'transform',
+          backfaceVisibility: 'hidden'
         }}
       >
         {projects.map((proj) => (
@@ -297,7 +327,9 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
               gap: '0.5rem',
               cursor: 'pointer',
               transition: 'transform 0.4s ease',
-              flexShrink: 0
+              flexShrink: 0,
+              willChange: 'transform',
+              backfaceVisibility: 'hidden'
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
@@ -315,12 +347,15 @@ export default function WorkGallery({ onProjectSelect }: WorkGalleryProps) {
                 <img
                   src={proj.bannerImage}
                   alt={proj.title}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
                     filter: 'grayscale(80%)',
-                    transition: 'filter 0.4s ease'
+                    transition: 'filter 0.4s ease',
+                    willChange: 'filter'
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.filter = 'grayscale(0%)';
